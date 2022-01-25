@@ -1,6 +1,6 @@
 {
   "name": "@fangcha/app-request",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A simple networking framework for node.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

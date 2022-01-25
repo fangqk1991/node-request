@@ -30,7 +30,7 @@ export class CommonAPI implements ApiOptions {
     } else {
       const route = options.route || ''
       let index = 0
-      this.api = route.replace(/:([\w-]+)/g, () => {
+      this.api = route.replace(/:([_a-zA-Z][\w-]*)/g, () => {
         return `${replacements[index++]}`
       })
       assert.ok(index === replacements.length)
