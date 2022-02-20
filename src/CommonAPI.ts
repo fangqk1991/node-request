@@ -29,11 +29,7 @@ export class CommonAPI implements ApiOptions {
       this.rawAPI = this.api
     } else {
       const route = options.route || ''
-      let index = 0
-      this.api = route.replace(/:([_a-zA-Z][\w-]*)/g, () => {
-        return `${replacements[index++]}`
-      })
-      assert.ok(index === replacements.length)
+      this.api = CommonAPI.buildUrl(route, ...replacements)
       this.route = route
       this.rawAPI = route
     }
@@ -42,8 +38,17 @@ export class CommonAPI implements ApiOptions {
     this.description = options.description || ''
   }
 
-  static create(options: ApiOptions, ...replacements: (string | number)[]) {
+  public static create(options: ApiOptions, ...replacements: (string | number)[]) {
     return new CommonAPI(options, ...replacements)
+  }
+
+  public static buildUrl(route: string, ...replacements: (string | number)[]) {
+    let index = 0
+    const url = route.replace(/:([_a-zA-Z][\w-]*)/g, () => {
+      return `${replacements[index++]}`
+    })
+    assert.ok(index === replacements.length)
+    return url
   }
 
   toString() {
