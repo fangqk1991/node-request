@@ -84,7 +84,7 @@ export class AxiosBuilder {
     return this
   }
 
-  public setQueryParams(queryParams: {}) {
+  public setQueryParams<T = {}>(queryParams: T) {
     this.queryParams = queryParams
     return this
   }
@@ -97,7 +97,7 @@ export class AxiosBuilder {
     )
   }
 
-  public setBodyData(bodyData: any) {
+  public setBodyData<T = any>(bodyData: T) {
     this.bodyData = bodyData
     return this
   }
@@ -268,9 +268,9 @@ export class AxiosBuilder {
     }
   }
 
-  public async quickSend() {
+  public async quickSend<T = any>() {
     await this.execute()
-    return this.axiosResponse?.data
+    return this.axiosResponse?.data as T
   }
 }
 
