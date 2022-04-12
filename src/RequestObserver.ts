@@ -1,7 +1,8 @@
-import { CommonAPI } from './CommonAPI'
+import { AxiosBuilder } from './AxiosBuilder'
+import AppError from '@fangcha/app-error'
 
 export interface RequestObserver {
-  onError(error: Error, commonApi: CommonAPI): void | Promise<void>
-  onRequestStart?(client: any, commonApi?: CommonAPI): void | Promise<void>
-  onRequestDone?(client: any, commonApi?: CommonAPI): void | Promise<void>
+  onRequestStart: (client: AxiosBuilder) => void | Promise<void>
+  onRequestSuccess: (client: AxiosBuilder, responseData?: any) => void | Promise<void>
+  onRequestFailure: (client: AxiosBuilder, error: AppError, responseData?: any) => void | Promise<void>
 }
