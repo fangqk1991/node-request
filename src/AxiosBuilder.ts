@@ -2,7 +2,7 @@ import { ApiOptions, CommonAPI } from './CommonAPI'
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios'
 import * as FormData from 'form-data'
 import { RequestObserverV2 } from './RequestObserverV2'
-import AppError from '@fangcha/app-error'
+import AppError, { AppException, ErrorModel } from '@fangcha/app-error'
 import * as qs from 'qs'
 
 export type ErrorHandler = (error: AppError) => Promise<void> | void
@@ -239,6 +239,19 @@ export class AxiosBuilder {
         }
       }
       this.appError = new AppError(message, statusCode, this.axiosError)
+
+      if (
+        error.response &&
+        error.response.data &&
+        typeof error.response.data === 'object' &&
+        error.response.data.phrase
+      ) {
+        const errorModel = error.response.data as ErrorModel
+        this.appError = AppException.exception(error.response.data.phrase, {
+          statusCode: statusCode,
+          message: errorModel.message || message,
+        })
+      }
       if (this._errorParser) {
         this.appError = this._errorParser(this, this.appError)
       }

@@ -215,10 +215,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fangcha/app-error@>=1":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@fangcha/app-error/-/app-error-1.1.0.tgz#6055f5b537dc05a384dab45cbf60958f3337a37b"
-  integrity sha512-9A4xraQWNoEwUdP0Rs1+WJnV0f4ufFytYQ/y/X+5UqVpxu3OVlwUlp7rBOehioECVOh06qIF6geV1sXqUdFOIA==
+"@fangcha/app-error@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@fangcha/app-error/-/app-error-1.3.0.tgz#a62b7bd48d9b084d8409cd07f072181c40a3c36c"
+  integrity sha512-/Nk6O6CJ8DVHmIj1F7imEVjlm50QncyssLP0fzVOqkl1IxoWRjA8gCjFJebU7jC5y3sP9rfxsfTNC6sGErX1BQ==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
