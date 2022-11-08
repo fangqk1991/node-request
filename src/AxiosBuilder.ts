@@ -1,9 +1,10 @@
 import { ApiOptions, CommonAPI } from './CommonAPI'
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios'
+import { AxiosError, AxiosRequestConfig, AxiosResponse, Method, ParamsSerializerOptions } from 'axios'
 import * as FormData from 'form-data'
 import { RequestObserverV2 } from './RequestObserverV2'
 import AppError, { AppException, ErrorModel } from '@fangcha/app-error'
 import * as qs from 'qs'
+const axios = require('axios')
 
 export type ErrorHandler = (error: AppError) => Promise<void> | void
 export type ErrorParser = (client: AxiosBuilder, error: AppError) => AppError
@@ -31,10 +32,12 @@ export class AxiosBuilder {
   private _observer?: RequestObserverV2
   private _startTs = 0
   private _endTs = 0
-  public queryParamsSerializer = (params: any) => {
-    return qs.stringify(params, {
-      arrayFormat: 'repeat',
-    })
+  public queryParamsSerializer: ParamsSerializerOptions = {
+    serialize: (params: any) => {
+      return qs.stringify(params, {
+        arrayFormat: 'repeat',
+      })
+    },
   }
 
   constructor() {
@@ -85,7 +88,7 @@ export class AxiosBuilder {
   }
 
   public setQueryParams<T = {}>(queryParams: T) {
-    this.queryParams = queryParams
+    this.queryParams = queryParams as any
     return this
   }
 
@@ -140,7 +143,7 @@ export class AxiosBuilder {
   public getRequestUrl() {
     let url = `${this.baseURL}${this.commonApi.api}`
     if (Object.keys(this.queryParams).length > 0) {
-      url = `${url}?${this.queryParamsSerializer(this.queryParams)}`
+      url = `${url}?${this.queryParamsSerializer.serialize!(this.queryParams)}`
     }
     return url
   }
@@ -198,7 +201,7 @@ export class AxiosBuilder {
     }
 
     if (this.formData) {
-      Object.assign(options.headers, this.formData.getHeaders())
+      Object.assign(options.headers!, this.formData.getHeaders())
       options.data = this.formData
     }
 
@@ -219,11 +222,11 @@ export class AxiosBuilder {
       if (!this._endTs) {
         this._endTs = Date.now()
       }
-      const error = e as AxiosError
+      const error = e as AxiosError<ErrorModel>
       this.axiosError = error
 
       let statusCode
-      let message
+      let message: any
       if (error.code === 'ECONNABORTED' || error.response === undefined) {
         message = `Request timeout, please try again later. Code: ${error.code}`
         statusCode = 504

@@ -18,7 +18,7 @@ describe('Test AppRequest', () => {
     const request = new AppRequest('GET', 'https://service.fangcha.me/api/test/http/test_302')
     request.setResponseJSON(true)
     const response = await request.execute()
-    console.log(response)
+    console.info(response)
     assert.ok(typeof request.getResponseHeaders() === 'object')
     assert.ok(typeof response === 'object')
   })
@@ -29,7 +29,7 @@ describe('Test AppRequest', () => {
       request.setResponseJSON(true)
       await request.execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
     }
@@ -39,7 +39,7 @@ describe('Test AppRequest', () => {
     const request = new AppRequest('POST', 'https://service.fangcha.me/api/test/http/test_delay')
     request.setResponseJSON(true)
     const response = await request.execute()
-    // console.log(response)
+    // console.info(response)
     assert.ok(typeof response === 'object')
   })
 
@@ -48,8 +48,8 @@ describe('Test AppRequest', () => {
       const request = new AppRequest('GET', 'https://service.fangcha.me/api/test/http/test_code')
       await request.execute()
       assert.fail()
-    } catch (e) {
-      // console.log(e.statusCode, e.message)
+    } catch (e: any) {
+      // console.info(e.statusCode, e.message)
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
     }
@@ -60,8 +60,8 @@ describe('Test AppRequest', () => {
       const request = new AppRequest('GET', 'https://service.fangcha.me/api/test/http/nonexistence')
       await request.execute()
       assert.fail()
-    } catch (e) {
-      // console.log(e.message)
+    } catch (e: any) {
+      // console.info(e.message)
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
     }
@@ -73,8 +73,8 @@ describe('Test AppRequest', () => {
       request.setTimeout(1000)
       await request.execute()
       assert.fail()
-    } catch (e) {
-      // console.log(e.message)
+    } catch (e: any) {
+      // console.info(e.message)
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
     }
@@ -121,13 +121,13 @@ describe('Test AppRequest', () => {
       const localPath = `${__dirname}/test.jpg`
       fs.writeFileSync(localPath, await request.downloadBuffer())
       assert.fail()
-    } catch (e) {}
+    } catch (e: any) {}
   })
 
   it(`Test download catch error`, async () => {
     const request = new AppRequest('GET', 'https://image.fangqk.com/nonexistence')
     request.setErrorHandler(() => {
-      console.log('handle error')
+      console.info('handle error')
     })
     const buffer = await request.downloadBuffer()
     assert.ok(!buffer)

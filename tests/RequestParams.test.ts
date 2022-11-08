@@ -21,7 +21,8 @@ describe('Test RequestParams', () => {
       'xxxx[': 233,
     }
     const result = RequestParams.buildQuery(queryParams)
-    const expectResult = 'a=1&b=bbb&c=1&c=2&c=3&c=4&d%5Be%5D=1&d%5Bf%5D%5Bg%5D=1&d%5Bf%5D%5Bh%5D=1&d%5Bf%5D%5Bh%5D=2&d%5Bf%5D%5Bh%5D=3&xxxx%5B=233'
+    const expectResult =
+      'a=1&b=bbb&c=1&c=2&c=3&c=4&d%5Be%5D=1&d%5Bf%5D%5Bg%5D=1&d%5Bf%5D%5Bh%5D=1&d%5Bf%5D%5Bh%5D=2&d%5Bf%5D%5Bh%5D=3&xxxx%5B=233'
     assert.ok(result === expectResult)
     await axiosGET('https://httpbin.org/get')
       .setQueryParams(queryParams)

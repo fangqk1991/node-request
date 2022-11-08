@@ -80,7 +80,7 @@ export class AppRequest {
         throw new AppError('JSON parse error')
       }
       return response
-    } catch (err) {
+    } catch (err: any) {
       if (this._handler) {
         await this._handler(err)
         return
@@ -98,7 +98,7 @@ export class AppRequest {
     let buffer
     try {
       buffer = await rp(options)
-    } catch (err) {
+    } catch (err: any) {
       if (this._handler) {
         await this._handler(err)
         return

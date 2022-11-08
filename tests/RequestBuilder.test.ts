@@ -43,7 +43,7 @@ describe('Test RequestBuilder', () => {
       request.setResponseJSON(true)
       await request.execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
     }
@@ -62,7 +62,7 @@ describe('Test RequestBuilder', () => {
       const request = fangchaBuilder.buildRequest(CommonAPI.create(APIData.TestCode))
       await request.execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       // console.log(e.statusCode, e.message)
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
@@ -74,7 +74,7 @@ describe('Test RequestBuilder', () => {
       const request = fangchaBuilder.buildRequest(CommonAPI.create(APIData.Nonexistence))
       await request.execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       // console.log(e.message)
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
@@ -87,7 +87,7 @@ describe('Test RequestBuilder', () => {
       request.setTimeout(1000)
       await request.execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       // console.log(e.message)
       assert.ok(typeof e.statusCode === 'number')
       assert.ok(typeof e.message === 'string')
@@ -98,7 +98,7 @@ describe('Test RequestBuilder', () => {
     const request = fangchaBuilder.buildRequest(CommonAPI.create(APIData.NormalPOST))
     request.setResponseJSON(true)
     request.setFormData({
-      file2: fs.createReadStream(`${__dirname}/hello.txt`)
+      file2: fs.createReadStream(`${__dirname}/hello.txt`),
     })
     const response = await request.execute()
     assert.ok(typeof response === 'object')
@@ -113,7 +113,9 @@ describe('Test RequestBuilder', () => {
   })
 
   it(`Test download`, async () => {
-    const request = RequestBuilder.buildRequestForGET('https://image.fangqk.com/2019-02-23/performance-time-sequence.png')
+    const request = RequestBuilder.buildRequestForGET(
+      'https://image.fangqk.com/2019-02-23/performance-time-sequence.png'
+    )
     const localPath = `${__dirname}/test.jpg`
     if (fs.existsSync(localPath)) {
       fs.unlinkSync(localPath)

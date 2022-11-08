@@ -1,8 +1,7 @@
 import * as assert from 'assert'
-import { AxiosBuilder, axiosDownload, axiosGET, axiosPOST } from '../src'
+import { axiosDownload, axiosGET, axiosPOST, RequestObserverV2 } from '../src'
 import { AxiosError } from 'axios'
 import * as fs from 'fs'
-import { RequestObserverV2 } from '../src'
 
 const observer: RequestObserverV2 = {
   onRequestStart: (client) => {
@@ -27,7 +26,7 @@ describe('Test AxiosBuilder', () => {
     await builder.execute()
     const response = builder.axiosResponse!
     assert.ok(typeof response === 'object')
-    assert.equal(response.status, 200)
+    assert.strictEqual(response.status, 200)
     assert.ok(typeof response.config === 'object')
     assert.ok(typeof response.headers === 'object')
     assert.ok(typeof response.data === 'object')
@@ -42,11 +41,11 @@ describe('Test AxiosBuilder', () => {
       })
       await builder.execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       const error = e.extras as AxiosError
       assert.ok(error.isAxiosError)
       assert.ok(!!error.response)
-      assert.equal(error.response?.status, 302)
+      assert.strictEqual(error.response?.status, 302)
     }
   })
 
@@ -56,18 +55,18 @@ describe('Test AxiosBuilder', () => {
     await builder.execute()
     const response = builder.axiosResponse!
     assert.ok(typeof response === 'object')
-    assert.equal(response.status, 200)
+    assert.strictEqual(response.status, 200)
   })
 
   it(`Test error code`, async () => {
     try {
       await axiosGET('https://service.fangcha.me/api/test/http/test_code').setObserver(observer).execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       const error = e.extras as AxiosError
       assert.ok(error.isAxiosError)
       assert.ok(!!error.response)
-      assert.equal(error.response!.status, 400)
+      assert.strictEqual(error.response!.status, 400)
     }
   })
 
@@ -75,11 +74,11 @@ describe('Test AxiosBuilder', () => {
     try {
       await axiosGET('https://service.fangcha.me/api/test/http/nonexistence').setObserver(observer).execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       const error = e.extras as AxiosError
       assert.ok(error.isAxiosError)
       assert.ok(!!error.response)
-      assert.equal(error.response!.status, 404)
+      assert.strictEqual(error.response!.status, 404)
     }
   })
 
@@ -87,11 +86,11 @@ describe('Test AxiosBuilder', () => {
     try {
       await axiosGET('http://nonexistence.server/').setObserver(observer).execute()
       assert.fail()
-    } catch (e) {
+    } catch (e: any) {
       const error = e.extras as AxiosError
       assert.ok(error.isAxiosError)
       assert.ok(!!error.response)
-      assert.equal(error.response!.status, 503)
+      assert.strictEqual(error.response!.status, 503)
     }
   })
 
@@ -124,7 +123,7 @@ describe('Test AxiosBuilder', () => {
     builder.setErrorHandler((error) => {
       assert.ok(error.extras.isAxiosError)
       assert.ok(!!error.extras.response)
-      assert.equal(error.extras.response!.status, 404)
+      assert.strictEqual(error.extras.response!.status, 404)
     })
     await builder.execute()
   })
@@ -143,10 +142,12 @@ describe('Test AxiosBuilder', () => {
   })
 
   it(`Test properties`, async () => {
-    const builder = axiosGET('https://httpbin.org/get').setObserver(observer).setQueryParams({ a: 1 })
-    const data = await builder.quickSend()
+    const builder = axiosGET('https://httpbin.org/get')
+      .setObserver(observer)
+      .setQueryParams({ a: [1, 2] })
+    await builder.quickSend()
     assert.strictEqual(builder.getRequestMethod(), 'GET')
-    assert.strictEqual(builder.getRequestUrl(), 'https://httpbin.org/get?a=1')
+    assert.strictEqual(builder.getRequestUrl(), 'https://httpbin.org/get?a=1&a=2')
     assert.strictEqual(builder.getHomeName(), 'httpbin.org')
     assert.strictEqual(builder.getProtocol(), 'https')
   })
